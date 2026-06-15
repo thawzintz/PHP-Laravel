@@ -25,8 +25,27 @@ class GuestbookController extends Controller
     }
     public function destroy($id)
     {
-    $entry = \App\Models\Guestbook::findOrFail($id);   
+    $entry = Guestbook::findOrFail($id);   
     $entry->delete();
     return redirect('/guestbook')->with('success', 'Message deleted successfully!');
     }
+    
+public function edit($id)
+{
+    $guest = Guestbook::findOrFail($id); 
+    return view('guestbook-edit', compact('guest'));
+}
+
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'name' => 'required',
+        'message' => 'required',
+    ]);
+
+    $guest = Guestbook::findOrFail($id);
+    $guest->update($request->all());
+
+    return redirect('/guestbook')->with('success', 'Data updated successfully!');
+}
 }
